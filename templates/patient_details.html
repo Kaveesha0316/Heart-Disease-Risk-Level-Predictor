@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Disease Risk Predictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf9 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 150, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(to right, #4b6cb7, #182848);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 4px;
+            background: linear-gradient(to right, #4b6cb7, #182848);
+            border-radius: 2px;
+        }
+
+        .form-container {
+            padding: 40px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+            font-size: 0.95rem;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 15px;
+            top: 40px;
+            color: #4b6cb7;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            border: 2px solid #e1e5eb;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #f8fafc;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #4b6cb7;
+            box-shadow: 0 0 0 3px rgba(75, 108, 183, 0.2);
+            background-color: white;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 5px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .radio-option input[type="radio"] {
+            display: none;
+        }
+
+        .radio-option .checkmark {
+            width: 22px;
+            height: 22px;
+            border: 2px solid #4b6cb7;
+            border-radius: 50%;
+            display: inline-block;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .radio-option .checkmark::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #4b6cb7;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .radio-option input:checked + .checkmark::after {
+            opacity: 1;
+        }
+
+        .radio-option input:checked + .checkmark {
+            border-color: #4b6cb7;
+            background: rgba(75, 108, 183, 0.1);
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(to right, #4b6cb7, #182848);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(75, 108, 183, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(75, 108, 183, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 25px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .card {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 10px;
+            border-left: 4px solid #4b6cb7;
+        }
+
+        .card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .card ul {
+            padding-left: 20px;
+        }
+
+        .card li {
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                padding: 25px 20px;
+            }
+            
+            .form-container {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-heartbeat"></i> Heart Disease Risk Level Predictor</h1>
+            <p>Please fill this form with your correct and true details</p>
+        </div>
+        
+        <div class="form-container">
+            <form action="http://127.0.0.1:5000/getresults" method="POST">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="name" name="name" class="form-control" placeholder="Enter your full name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="gender" value="1" required>
+                                <span class="checkmark"></span>
+                                Male
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="gender" value="2">
+                                <span class="checkmark"></span>
+                                Female
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <i class="fas fa-birthday-cake"></i>
+                        <input type="number" id="age" name="age" class="form-control" placeholder="Enter your age" min="18" max="120" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tc">Total Cholesterol (mg/dL)</label>
+                        <i class="fas fa-vial"></i>
+                        <input type="number" id="tc" name="tc" class="form-control" placeholder="e.g. 180" min="100" max="400" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="hdl">HDL Cholesterol (mg/dL)</label>
+                        <i class="fas fa-vial"></i>
+                        <input type="number" id="hdl" name="hdl" class="form-control" placeholder="e.g. 50" min="20" max="100" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sbp">Systolic Blood Pressure (mm Hg)</label>
+                        <i class="fas fa-heartbeat"></i>
+                        <input type="number" id="sbp" name="sbp" class="form-control" placeholder="e.g. 120" min="70" max="200" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Smoking Status</label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="smoke" value="1" required>
+                                <span class="checkmark"></span>
+                                Smoker
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="smoke" value="0">
+                                <span class="checkmark"></span>
+                                Non-smoker
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Blood Pressure Medication</label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="bpm" value="1" required>
+                                <span class="checkmark"></span>
+                                Taking Medication
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="bpm" value="2">
+                                <span class="checkmark"></span>
+                                Not Taking Medication
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Diabetic</label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="diab" value="1" required>
+                                <span class="checkmark"></span>
+                                Diabetic
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="diab" value="0">
+                                <span class="checkmark"></span>
+                                Non-Diabetic
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-calculator"></i> Calculate Heart Disease Risk
+                </button>
+                
+                <div class="footer-note">
+                    <p>Your health data is confidential and securely processed</p>
+                </div>
+            </form>
+        </div>
+        
+        <div class="card">
+            <h3><i class="fas fa-info-circle"></i> Understanding Your Measurements</h3>
+            <ul>
+                <li><strong>Total Cholesterol:</strong> Desirable level is below 200 mg/dL</li>
+                <li><strong>HDL Cholesterol:</strong> Ideal level is 60 mg/dL or higher</li>
+                <li><strong>Systolic Blood Pressure:</strong> Normal reading is below 120 mm Hg</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Input validation for numbers
+        const numberInputs = document.querySelectorAll('input[type="number"]');
+        numberInputs.forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.value < this.min) this.value = this.min;
+                if (this.value > this.max) this.value = this.max;
+            });
+        });
+        
+        // Form submission feedback
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(e) {
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            submitBtn.disabled = true;
+        });
+    </script>
+</body>
+</html>
